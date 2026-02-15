@@ -134,6 +134,7 @@ func (h *Headless) Crawl(URL string) error {
 			}
 
 			if rr.Response != nil {
+				rr.Response.KnowledgeBase = h.options.ClassifyPage(rr.Response.Body)
 				rr.Response.Raw = ""
 				rr.Response.Body = ""
 			}

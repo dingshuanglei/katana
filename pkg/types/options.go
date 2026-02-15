@@ -186,6 +186,10 @@ type Options struct {
 	DisableUniqueFilter bool
 	// MaxOnclickLinks is the maximum number of onclick links to process per page (default: 10)
 	MaxOnclickLinks int
+	// KnowledgeBase enables knowledge base classification using dit
+	KnowledgeBase bool
+	// FilterPageType filters results by page type
+	FilterPageType goflags.StringSlice
 }
 
 func (options *Options) ParseCustomHeaders() map[string]string {
