@@ -1,5 +1,7 @@
 package utils
 
+import "sync"
+
 // DefaultPromotionThreshold is the number of distinct children a trie node
 // must accumulate before being promoted to a parameter node.
 const DefaultPromotionThreshold = 10
@@ -9,6 +11,7 @@ const DefaultPromotionThreshold = 10
 // the promotion threshold, it is promoted to a parameter node and all
 // future values at that position are collapsed.
 type PathTrie struct {
+	mu        sync.Mutex
 	roots     map[string]*trieNode
 	threshold int
 }
@@ -31,6 +34,9 @@ func NewPathTrie() *PathTrie {
 // a new slice where promoted positions are replaced with "{param}".
 // Non-promoted segments are registered in the trie for future cardinality tracking.
 func (t *PathTrie) Fingerprint(host string, segments []string) []string {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+
 	root, ok := t.roots[host]
 	if !ok {
 		root = &trieNode{children: make(map[string]*trieNode)}
