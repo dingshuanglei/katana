@@ -3,6 +3,7 @@ package captcha
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/go-rod/rod"
 	ditcaptcha "github.com/happyhackingspace/dit/captcha"
@@ -26,7 +27,7 @@ func NewHandler(solverProvider, apiKey string) (*Handler, error) {
 }
 
 func (h *Handler) HandleIfCaptcha(ctx context.Context, page *rod.Page, pageHTML string) (bool, error) {
-	if ct := ditcaptcha.DetectCaptchaInHTML(pageHTML); ct == ditcaptcha.CaptchaTypeNone {
+	if ditcaptcha.DetectCaptchaInHTML(pageHTML) == ditcaptcha.CaptchaTypeNone && !strings.Contains(pageHTML, "data-sitekey") {
 		return false, nil
 	}
 
